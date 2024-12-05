@@ -11,7 +11,6 @@ class WordCounter:
         self.zigs = [] # diagonals from NW to SE
         self.zags = [] # diagonals from SW to NE
 
-
         with open(filename, 'r') as file:
             for line in file:
                 self.word_search.append(line.strip())
@@ -23,6 +22,11 @@ class WordCounter:
         self.get_cols()
         self.get_zigs()
         self.get_zags()
+
+        self.r_rows = [word[::-1] for word in self.rows]
+        self.r_cols = [word[::-1] for word in self.cols]
+        self.r_zigs = [word[::-1] for word in self.zigs]
+        self.r_zags = [word[::-1] for word in self.zags]
 
     def get_rows(self):
         if self.x_len < self.word_length:
@@ -44,8 +48,7 @@ class WordCounter:
         for start_x in range(self.x_len):
             zig = self.get_zig(start_x, 0)
 
-            if len(zig) >= self.word_length:
-                self.zigs.append(zig)
+            self.zigs.append(zig)
 
         for i, start_y in enumerate(range(self.y_len)):
             # Skip the first zig, it should have been captured above
@@ -54,8 +57,7 @@ class WordCounter:
 
             zig = self.get_zig(0, start_y)
 
-            if len(zig) >= self.word_length:
-                self.zigs.append(zig)
+            self.zigs.append(zig)
 
     def get_zig(self, x, y):
         zig = ''
@@ -96,10 +98,10 @@ class WordCounter:
         all_strings_to_match.extend(self.cols)
         all_strings_to_match.extend(self.zigs)
         all_strings_to_match.extend(self.zags)
-        all_strings_to_match.extend([word[::-1] for word in self.rows])
-        all_strings_to_match.extend([word[::-1] for word in self.cols])
-        all_strings_to_match.extend([word[::-1] for word in self.zigs])
-        all_strings_to_match.extend([word[::-1] for word in self.zags])
+        all_strings_to_match.extend(self.r_rows)
+        all_strings_to_match.extend(self.r_cols)
+        all_strings_to_match.extend(self.r_zigs)
+        all_strings_to_match.extend(self.r_zags)
 
         matches = []
         for string in all_strings_to_match:
@@ -107,3 +109,51 @@ class WordCounter:
 
         return len(matches)
 
+    def live_mas(self):
+        a_coords = self.find_a_coords()
+
+        total_mas = 0
+
+        for coord in a_coords:
+            tl = self.word_search[coord.y-1][coord.x-1]
+            br = self.word_search[coord.y+1][coord.x+1]
+            bl = self.word_search[coord.y+1][coord.x-1]
+            tr = self.word_search[coord.y-1][coord.x+1]
+
+            if self.is_mas(tl, br, bl, tr):
+                total_mas += 1
+
+        return total_mas
+
+    def mas_value(self, c):
+        if c == 'M':
+            return 1
+        if c == 'S':
+            return -1
+        return 1000
+
+    def is_mas(self, a, b, c, d):
+        return self.mas_value(a) + self.mas_value(b) == 0 and self.mas_value(c) + self.mas_value(d) == 0
+
+    def find_a_coords(self):
+        coords = []
+
+        for y in range(self.y_len):
+            if y == 0 or y == self.y_len - 1:
+                continue
+            for x, c in enumerate(self.word_search[y]):
+                if x == 0 or x == self.x_len - 1:
+                    continue
+
+                if c == 'A':
+                    coords.append(Coordinate(x, y))
+
+        return coords
+
+class Coordinate:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"X: {self.x}, Y: {self.y}"

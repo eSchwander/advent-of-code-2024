@@ -17,7 +17,7 @@ class TestWordCounter(unittest.TestCase):
 
     def test_zigs(self):
         counter = WordCounter('rows_cols_zigs_zags_test.txt', 'XMAS')
-        expected_zigs = ['AFKP']
+        expected_zigs = ['AFKP', 'BGL', 'CH', 'D', 'EJO', 'IN', 'M']
         self.assertEqual(counter.zigs, expected_zigs)
 
     def test_zags(self):
@@ -48,6 +48,33 @@ class TestWordCounter(unittest.TestCase):
     def test_count_zag(self):
         counter = WordCounter('zag_test.txt', 'XMAS')
         self.assertEqual(counter.count_word_matches(), 2)
+
+    def test_no_mas(self):
+        counter = WordCounter('no_mas.txt', 'XMAS')
+        self.assertEqual(counter.live_mas(), 0)
+
+    def test_one_zig_mas(self):
+        counter = WordCounter('one_mas.txt', 'XMAS')
+        self.assertEqual(counter.live_mas(), 1)
+
+    def test_a_coords(self):
+        counter = WordCounter('a_coords_test.txt', 'XMAS')
+        coord = counter.find_a_coords()[0]
+        self.assertEqual(coord.x, 1)
+        self.assertEqual(coord.y, 1)
+
+    def test_mas_sample(self):
+        counter = WordCounter('mas_sample_test.txt', 'XMAS')
+        self.assertEqual(9, counter.live_mas())
+
+    def test_mas_sample_uncensored(self):
+        counter = WordCounter('test_input_2.txt', 'XMAS')
+        self.assertEqual(9, counter.live_mas())
+
+    def test_all_mas(self):
+        counter = WordCounter('all_mas.txt', 'XMAS')
+        self.assertEqual(4, counter.live_mas())
+
 
 if __name__ == '__main__':
     unittest.main()
