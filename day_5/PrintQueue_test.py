@@ -9,9 +9,9 @@ class PrintQueueTest(unittest.TestCase):
         pq = PrintQueue('test_input.txt')
         self.assertEqual(143, pq.evaluate_good_orders())
 
-    # def test_evaluate_bad_pages(self):
-    #     pq = PrintQueue('test_input.txt')
-    #     self.assertEqual(123, pq.evaluate_bad_orders())
+    def test_evaluate_bad_pages(self):
+        pq = PrintQueue('test_input.txt')
+        self.assertEqual(123, pq.evaluate_bad_orders())
 
     def test_page_to_node(self):
         pq = PrintQueue('test_input.txt')

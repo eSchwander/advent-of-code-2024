@@ -38,6 +38,7 @@ class PrintQueue:
         if page not in self.rules:
             return node
 
+        # Return the node if we already built it
         if page in self.page_to_node:
             return self.page_to_node[page]
 
