@@ -1,7 +1,7 @@
 import time
 import os
 
-memory_map = {}
+multiplication_map = {}
 
 class Rock:
     def __init__(self, value):
@@ -9,8 +9,8 @@ class Rock:
 
     def live(self):
         string = str(self.value)
-        if string in memory_map:
-            return memory_map[string]
+        if string in multiplication_map:
+            return multiplication_map[string]
 
         if int(self.value) == 0:
             result = [Rock(str(1))]
@@ -19,7 +19,7 @@ class Rock:
         else:
             result = [Rock(str(int(self.value) * 2024))]
 
-        memory_map[string] = result
+        multiplication_map[string] = result
         return result
 
     def split(self):
